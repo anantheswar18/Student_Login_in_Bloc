@@ -13,7 +13,7 @@ import 'package:student_app_project/student/student_bloc.dart';
 
 import '../../../constants/colors.dart';
 
-class UpdateScreen extends StatelessWidget {
+class UpdateScreen extends StatefulWidget {
   UpdateScreen({
     Key? key,
     // required this.passValue01,
@@ -25,21 +25,21 @@ class UpdateScreen extends StatelessWidget {
   final int index;
 
   @override
+  State<UpdateScreen> createState() => _UpdateScreenState();
+}
+
+class _UpdateScreenState extends State<UpdateScreen> {
+  @override
   late final _nameController =
-      TextEditingController(text: passValueProfile.name);
+      TextEditingController(text: widget.passValueProfile.name);
 
-  late final _ageController = TextEditingController(text: passValueProfile.age);
+  late final _ageController = TextEditingController(text: widget.passValueProfile.age);
 
-  late final _numController = TextEditingController(text: passValueProfile.num);
+  late final _numController = TextEditingController(text: widget.passValueProfile.num);
 
   String? imagepath;
-  // void initstate() async {
-  //   super.initState();
-  //   _nameController.text = passValueProfile.name;
-  //   _ageController.text = passValueProfile.age;
-  //   _numController.text = passValueProfile.num;
-  // }
 
+  // void initstate() async {
   Future<void> StudentAddBtn(int index) async {
     final _name = _nameController.text.trim();
     final _age = _ageController.text.trim();
@@ -56,7 +56,7 @@ class UpdateScreen extends StatelessWidget {
       name: _name,
       age: _age,
       num: _number,
-      image: imagepath ?? passValueProfile.image,
+      image: imagepath ?? widget.passValueProfile.image,
     );
     final studentDataB = await Hive.openBox<StudentModel>('student_db1');
     studentDataB.putAt(index, _students);
@@ -68,9 +68,9 @@ class UpdateScreen extends StatelessWidget {
     final PickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (PickedFile != null) {
-      // setState(() {
-      //   imagepath = PickedFile.path;
-      // });
+      setState(() {
+        imagepath = PickedFile.path;
+      });
     }
   }
 
@@ -81,10 +81,10 @@ class UpdateScreen extends StatelessWidget {
             name: _nameController.text,
             age: _ageController.text,
             num: _numController.text,
-            image: passValueProfile.image,);
+            image: widget.passValueProfile.image,);
         // StudentAddBtn(index);
         BlocProvider.of<StudentBloc>(context)
-            .add(UpdateSpecificData(_students, index));
+            .add(UpdateSpecificData(_students, widget.index));
 
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx) => const ListStudentWidget()),
@@ -146,8 +146,8 @@ class UpdateScreen extends StatelessWidget {
         CircleAvatar(
           radius: 75,
           backgroundImage: imagepath == null
-              ? FileImage(File(passValueProfile.image))
-              : FileImage(File(imagepath ?? passValueProfile.image)),
+              ? FileImage(File(widget.passValueProfile.image))
+              : FileImage(File(imagepath ?? widget.passValueProfile.image)),
         ),
         Positioned(
             bottom: 10,
@@ -167,10 +167,6 @@ class UpdateScreen extends StatelessWidget {
   Widget szdBox = const SizedBox(height: 20);
 
   //build======================================================================
-  // Future<void> keyBoard(keyboard) async {
-  //   TextInputType.number;
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -186,14 +182,14 @@ class UpdateScreen extends StatelessWidget {
               szdBox,
               textFieldName(
                 myController: _nameController,
-                hintName: passValueProfile.name,
+                hintName: widget.passValueProfile.name,
               ),
               szdBox,
               textFieldNum(
-                  myController: _ageController, hintName: passValueProfile.age),
+                  myController: _ageController, hintName: widget.passValueProfile.age),
               szdBox,
               textFieldNum(
-                  myController: _numController, hintName: passValueProfile.num),
+                  myController: _numController, hintName: widget.passValueProfile.num),
               szdBox,
               elavatedbtn(context),
             ]),

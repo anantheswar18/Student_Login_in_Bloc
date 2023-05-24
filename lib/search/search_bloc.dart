@@ -13,9 +13,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final searchResult = StudentBox.getStudentsData();
       List<StudentModel> studentList = searchResult.values.toList();
       studentList = studentList
-          .where((element) =>
-              element.name.toLowerCase().contains(event.value.toLowerCase()))
-          .toList();
+    .where((element) =>
+        element.name.toLowerCase().contains(event.value.toLowerCase()) ||
+        element.age.toLowerCase().contains(event.value.toLowerCase()))
+    .toList();
+          
           emit(SearchState.searchData(studentList));
     });
     on<ClearSearchEvent>((event, emit) {
